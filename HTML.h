@@ -1,0 +1,73 @@
+#ifndef HTML_H
+#define HTML_H
+#include "Arduino.h"
+String LoginHead = PSTR(
+  "<html lang='pl'>"
+  "<head>"
+  "<meta charset='utf-8'>"
+  "<title>Panel logowania</title>"
+  "<style>"
+  "body{"
+  "margin:0;"
+  "padding:0;"
+  "text-align:center;"
+  "font-family:Arial;"
+  "}"
+  ".login_panel{"
+  "width:420px;"
+  "margin:auto;"
+  "margin-top:100px;"
+  "padding:20px;"
+  "border-radius:10px;"
+  "background-color:#E0EFF0;"
+  "}"
+  ".login_panel form{"
+  "margin:0;"
+  "padding:0;"
+  "}"
+  ".login_panel input,.login_panel select,.login_panel button{"
+  "padding:6px;"
+  "font-size:18px;"
+  "}"
+  ".login_panel input,.login_panel select{"
+  "width:320px;"
+  "}"
+  ".login_panel button{"
+  "width:180px;"
+  "font-size:22px;"
+  "border-radius:6px;"
+  "}"
+  "</style>"
+  "</head>"
+  "<body>"
+  "<div class='login_panel'>"
+);
+String LoginFoot = PSTR(
+  "</div>"
+  "</body>"
+  "</html>"
+);
+String LoginSelect = PSTR(
+	"<select name='ssid'>"
+	"%s"  
+	"</select>"
+);
+String LoginFormTop = PSTR(
+    "<form method='POST' action='login'>"
+	"<p>"
+	"<label for='ssid'>SSID:<label>"
+	"<select name='ssid'>"
+); 
+String LoginFormBottom = PSTR(
+	"</select>"
+    "</p>"
+    "<p>"
+    "<label for='pass'>Hasło:<label>"
+    "<input type='password' name='pass' minlength='8' required >"
+    "</p>"
+    "<p>"
+    "<button type='submit' name='login'>OK</button>"
+    "</p>"
+    "</form>"
+);
+#endif

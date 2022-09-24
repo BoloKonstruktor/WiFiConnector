@@ -1,6 +1,6 @@
 #include "WiFiConnector.h"
 #include "HTML.h"
-#include "common.h"
+#include "EEPROM.h"
 
 bool login = false;
 
@@ -17,15 +17,6 @@ void WiFiConnector::begin( unsigned& addr, WebServer* server, uint16_t port ){
 	this->int_inst = this;
 	memset( wifip.ssid, 0, sizeof( wifip.ssid ) );
 	memset( wifip.ip, 0, sizeof( wifip.ip ) );
-	
-		if( addr == 0 ){
-			
-				if( !EEPROM.begin( 1000 ) ) {
-				  delay( 1000 );
-				  ESP.restart();
-				}
-		}
-
 	this->load( addr, 0 );
 	strcpy( wifip.ssid, wifi.ssid );
 	String ssid = wifi.ssid;
@@ -147,11 +138,66 @@ void WiFiConnector::setTimeout( uint8_t s ){
 
 //Metody prywatne
 void WiFiConnector::load( unsigned& addr, bool def ){
+		
+		if( addr == 0 ){
+			
+				if( !EEPROM.begin( 1000 ) ) {
+				  delay( 1000 );
+				  ESP.restart();
+				}
+		}
+	
 	this->eep_addr = addr;
-	load_param( addr, wifi, defwifi, def );
+	this->load_param( addr, wifi, defwifi, def );
 }
 
 void WiFiConnector::save( void ){
 	unsigned addr = this->eep_addr;
-	save_param( addr, wifi );
+	this->save_param( addr, wifi );
+}
+
+unsigned WiFiConnector::eep_read( unsigned offset, void* data, uint16_t size ){
+	uint8_t* buff = (uint8_t*)data;
+  
+		for ( uint16_t i = 0; i < size; i++ ){
+#ifdef ESP32
+			buff[i] = EEPROM.readUChar( offset );
+#else
+			buff[i] = EEPROM.read( offset );
+#endif
+			offset++;
+  
+				if ( offset == EEPROM.length() ) break;
+      }
+   
+	return offset;
+}
+  
+unsigned WiFiConnector::eep_write( unsigned offset, void* data, uint16_t size ){
+	const uint8_t* buff = (uint8_t*)data;
+      
+		for ( uint16_t i = 0; i < size; i++ ){
+#ifdef ESP32
+			EEPROM.writeUChar( offset, buff[i] );
+#else
+			EEPROM.write( offset, buff[i] );
+#endif
+			offset++;
+  
+				if ( offset == EEPROM.length() ) break;
+		}
+  
+    EEPROM.commit();
+    return offset+size;
+}
+  
+bool WiFiConnector::eep_empty( void* data, uint16_t size ){
+    const uint8_t* buff = (uint8_t*)data;
+  
+		for( uint16_t i = 0; i < size; i++ ){
+            
+				if( buff[i] != 0xFF ) return false;
+		}
+  
+    return true;
 }

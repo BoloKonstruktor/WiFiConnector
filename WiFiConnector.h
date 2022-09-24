@@ -43,6 +43,25 @@ class WiFiConnector {
 				String(ip[2]) + String(".") +\
 				String(ip[3]); 
 		}
+		unsigned eep_read( unsigned, void*, uint16_t );
+		unsigned eep_write( unsigned, void*, uint16_t );
+		bool eep_empty( void*, uint16_t );
+		template<typename D1, typename D2> void load_param( unsigned& addr, D1& data, D2 def, bool loaddef = false ){
+			size_t size = sizeof( data );
+			uint16_t _addr = this->eep_read( addr, &data, size );
+		  
+			  if( this->eep_empty( &data, size ) || loaddef ){
+				memcpy( &data, &def, size );
+				this->eep_write( addr, &data, size );
+			  }
+		  
+			addr = _addr;
+		} 
+		template<typename D> void save_param( unsigned& addr, D data ){
+			size_t size = sizeof( data );
+			this->eep_write( addr, &data, size );
+			addr = addr+size;
+		}
 	
 	public:
 	/*

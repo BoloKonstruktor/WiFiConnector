@@ -1,0 +1,28 @@
+#######################################
+# Syntax Coloring Map For Ultrasound
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+WiFiConnector			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+registerCallback		KEYWORD2
+reset					KEYWORD2
+setTimeout				KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+WC_WIFI_SCAN			LITERAL1
+WC_STA_START			LITERAL1
+WC_STA_CONNECTING		LITERAL1
+WC_STA_CONNECTED		LITERAL1
+WC_STA_TIMEOUT			LITERAL1
+WC_AP_START				LITERAL1

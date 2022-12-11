@@ -1,14 +1,17 @@
 #ifndef WIFICONNECTOR_H
 #define WIFICONNECTOR_H
 #include <WiFiClient.h>
-#ifdef ESP32
-#include <WiFi.h>
-#include <WebServer.h>
-#include <ESPmDNS.h>
-#else
+#ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#define WebServer	ESP8266WebServer
+#define AP_NAME		"ESP8266_AP"
+#else
+#include <WiFi.h>
+#include <WebServer.h>
+#include <ESPmDNS.h>
+#define AP_NAME		"ESP32_AP"
 #endif
 
 typedef struct {
@@ -36,12 +39,8 @@ class WiFiConnector {
 	private:
 		uint8_t timeout = 15;
 		unsigned eep_addr = 0;
-		String name = "ESP32_AP";
-#ifdef ESP32
+		String name = AP_NAME;
 		WebServer* server = NULL;
-#else
-		ESP8266WebServer* server = NULL;
-#endif
 		static WiFiConnector* int_inst;
 		void(*callback)( uint8_t, WIFIParam* ) = NULL;
 		
@@ -80,12 +79,7 @@ class WiFiConnector {
 	klasy WebServer - domyślnie NULL. Trzeci argument to port
 	serwera HTTP - domyślnie 80.
 	*/
-	
-#ifdef ESP32
-		void begin( unsigned& addr, WebServer* server=NULL, uint16_t port=80 );
-#else
-		void begin( unsigned& addr, ESP8266WebServer* server=NULL, uint16_t port=80 );
-#endif
+	void begin( unsigned& addr, WebServer* server=NULL, uint16_t port=80 );
 	
 	/*
 	Rejestrowanie funkcji wywoływanej dla zdarzeń.

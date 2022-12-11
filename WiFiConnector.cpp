@@ -13,11 +13,7 @@ uint8_t netcnt = 0;
 
 
 //Metody publiczne
-#ifdef ESP32
 void WiFiConnector::begin( unsigned& addr, WebServer* server, uint16_t port ){
-#else
-void WiFiConnector::begin( unsigned& addr, ESP8266WebServer* server, uint16_t port ){	
-#endif
 	this->int_inst = this;
 	memset( wifip.ssid, 0, sizeof( wifip.ssid ) );
 	memset( wifip.ip, 0, sizeof( wifip.ip ) );
@@ -69,12 +65,13 @@ void WiFiConnector::begin( unsigned& addr, ESP8266WebServer* server, uint16_t po
 				if( this->callback ) this->callback( WC_STA_CONNECTED, &wifip );
 		
 		} else {
-#ifdef ESP32
-			this->server = server ? server : new WebServer( port );
-#else
-			this->server = server ? server : new ESP8266WebServer( port );
-#endif
 			
+				if( server ) this->server = server;
+				else {
+					this->server = new WebServer( port );
+					this->server->begin();
+				}
+				
 			WiFi.mode( WIFI_AP );
 			WiFi.softAP( this->name.c_str() );
 			strcpy( wifip.ssid, this->name.c_str() );

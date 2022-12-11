@@ -1,9 +1,15 @@
 #ifndef WIFICONNECTOR_H
 #define WIFICONNECTOR_H
+#include <WiFiClient.h>
+#ifdef ESP32
 #include <WiFi.h>
 #include <WebServer.h>
-#include <WiFiClient.h>
 #include <ESPmDNS.h>
+#else
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+#endif
 
 typedef struct {
 	char ssid[65];
@@ -30,7 +36,12 @@ class WiFiConnector {
 	private:
 		uint8_t timeout = 15;
 		unsigned eep_addr = 0;
+		String name = "ESP32_AP";
+#ifdef ESP32
 		WebServer* server = NULL;
+#else
+		ESP8266WebServer* server = NULL;
+#endif
 		static WiFiConnector* int_inst;
 		void(*callback)( uint8_t, WIFIParam* ) = NULL;
 		
@@ -69,7 +80,12 @@ class WiFiConnector {
 	klasy WebServer - domyślnie NULL. Trzeci argument to port
 	serwera HTTP - domyślnie 80.
 	*/
-	void begin( unsigned& addr, WebServer* server=NULL, uint16_t port=80 );
+	
+#ifdef ESP32
+		void begin( unsigned& addr, WebServer* server=NULL, uint16_t port=80 );
+#else
+		void begin( unsigned& addr, ESP8266WebServer* server=NULL, uint16_t port=80 );
+#endif
 	
 	/*
 	Rejestrowanie funkcji wywoływanej dla zdarzeń.
@@ -93,6 +109,12 @@ class WiFiConnector {
 	Metodę należy wywołać przed wywołaniem metody: begin.
 	*/
 	void setTimeout( uint8_t s );
+	
+	/*
+	Ustawienie nazwy dla sieci WiFi w trybie AP
+	Metodę należy wywołać przed wywołaniem metody: begin.
+	*/
+	void setName( const char* n );
 								
 };
 #endif

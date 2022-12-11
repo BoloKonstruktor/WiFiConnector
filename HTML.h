@@ -1,7 +1,12 @@
 #ifndef HTML_H
 #define HTML_H
 #include "Arduino.h"
+
+#ifdef ESP32
 String LoginHead = PSTR(
+#else
+String LoginHead = (	
+#endif
   "<html lang='pl'>"
   "<head>"
   "<meta charset='utf-8'>"
@@ -42,23 +47,39 @@ String LoginHead = PSTR(
   "<body>"
   "<div class='login_panel'>"
 );
+#ifdef ESP32
 String LoginFoot = PSTR(
+#else
+String LoginFoot = (	
+#endif
   "</div>"
   "</body>"
   "</html>"
 );
+#ifdef ESP32
 String LoginSelect = PSTR(
+#else
+String LoginSelect = (	
+#endif
 	"<select name='ssid'>"
 	"%s"  
 	"</select>"
 );
+#ifdef ESP32
 String LoginFormTop = PSTR(
+#else
+String LoginFormTop = (	
+#endif
     "<form method='POST' action='login'>"
 	"<p>"
 	"<label for='ssid'>SSID:<label>"
 	"<select name='ssid'>"
 ); 
+#ifdef ESP32
 String LoginFormBottom = PSTR(
+#else
+String LoginFormBottom = (	
+#endif
 	"</select>"
     "</p>"
     "<p>"

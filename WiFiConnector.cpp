@@ -92,14 +92,22 @@ void WiFiConnector::begin( unsigned& addr, WebServer* server, uint16_t port ){
 				});
 			
 			this->server->on("/login", []() {
+			String ssid = "";
+			String pass = "";
 					
 					if( int_inst->server->method() == HTTP_POST ){
-						String ssid = int_inst->server->arg("ssid");
-						String pass = int_inst->server->arg("pass");
+						ssid = int_inst->server->arg("ssid");
+						pass = int_inst->server->arg("pass");
 						strcpy( wifip.ssid, ssid.c_str() );
 						strcpy( wifi.ssid, ssid.c_str() );
 						strcpy( wifi.pass, pass.c_str() );
 						int_inst->save();  
+					}
+					
+					if( ssid == "" && pass == "" ) {
+					  int_inst->server->sendHeader( "Location", "/", true );
+					  int_inst->server->send( 302, "text/plain", "" );
+					  int_inst->server->client().stop();						
 					}
         
 				String HTML = LoginHead;

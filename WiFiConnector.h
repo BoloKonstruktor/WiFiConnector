@@ -39,7 +39,7 @@ class WiFiConnector {
 	private:
 		uint8_t timeout = 15;
 		unsigned eep_addr = 0;
-		String name = AP_NAME;
+		String apname = AP_NAME, staname = "";
 		WebServer* server = NULL;
 		static WiFiConnector* int_inst;
 		void(*callback)( uint8_t, WIFIParam* ) = NULL;
@@ -108,7 +108,13 @@ class WiFiConnector {
 	Ustawienie nazwy dla sieci WiFi w trybie AP
 	Metodę należy wywołać przed wywołaniem metody: begin.
 	*/
-	void setName( const char* n );
+	void setAPName( const char* n );
+	
+	/*
+	Ustawienie nazwy dla sieci WiFi w trybie STA
+	Metodę należy wywołać przed wywołaniem metody: begin.
+	*/
+	void setSTAName( const char* n );
 								
 };
 #endif

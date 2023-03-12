@@ -36,6 +36,9 @@ void WiFiConnector::begin( unsigned& addr, WebServer* server, uint16_t port ){
 		
 		if( found ){
 			WiFi.mode( WIFI_STA );
+			
+				if( this->staname != "" ) WiFi.hostname( this->staname.c_str() );
+					
 			WiFi.begin( wifi.ssid, wifi.pass );
 			
 				if( this->callback ) this->callback( WC_STA_START, &wifip );
@@ -73,8 +76,8 @@ void WiFiConnector::begin( unsigned& addr, WebServer* server, uint16_t port ){
 				}
 				
 			WiFi.mode( WIFI_AP );
-			WiFi.softAP( this->name.c_str() );
-			strcpy( wifip.ssid, this->name.c_str() );
+			WiFi.softAP( this->apname.c_str() );
+			strcpy( wifip.ssid, this->apname.c_str() );
 			strcpy( wifip.ip, this->ip2str( WiFi.softAPIP() ).c_str() );
 				
 				if( this->callback ) this->callback( WC_AP_START, &wifip );
@@ -149,8 +152,12 @@ void WiFiConnector::setTimeout( uint8_t s ){
 	this->timeout = s;
 }
 
-void WiFiConnector::setName( const char* n ){
-	this->name = n;
+void WiFiConnector::setAPName( const char* n ){
+	this->apname = n;
+}
+
+void WiFiConnector::setSTAName( const char* n ){
+	this->staname = n;
 }
 
 

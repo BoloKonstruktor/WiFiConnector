@@ -4,7 +4,7 @@
 
 bool login = false;
 
-const TWIFI defwifi = { 0, 0 };
+const TWIFI defwifi = { "", "" };
 TWIFI wifi;
 WIFIParam wifip;
 
